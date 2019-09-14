@@ -3,8 +3,24 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
   username: { type: String, unique: true, required: true },
-  hash: { type: String, required: true },
-  registeredDate: { type: Date, default: Date.now }
+  isHost: { type: Boolean, required: true, default: false },
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"]
+    },
+    coordinates: {
+      type: [Number]
+    }
+  },
+  referals: [
+    {
+      host: this,
+      score: { type: Number }
+    }
+  ],
+  registeredDate: { type: Date, default: Date.now },
+  hash: { type: String, required: true }
 });
 
 schema.set("toJSON", { virtuals: true });
