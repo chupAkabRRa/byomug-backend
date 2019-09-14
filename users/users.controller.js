@@ -6,6 +6,7 @@ const userService = require("./user.service");
 router.post("/authenticate", authenticate);
 router.post("/register", register);
 router.post("/scores", addScore);
+router.get("/hosts", getAllHosts);
 router.get("/:id", getById);
 router.get("/", getAll);
 
@@ -47,5 +48,12 @@ function addScore(req, res, next) {
   userService
     .addScore(req.body.hostId, req.body.userId)
     .then(newScore => res.json({ score: newScore }))
+    .catch(err => next(err));
+}
+
+function getAllHosts(req, res, next) {
+  userService
+    .getAllHosts()
+    .then(hosts => res.json(hosts))
     .catch(err => next(err));
 }

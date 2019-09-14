@@ -9,7 +9,8 @@ module.exports = {
   getAll,
   create,
   getById,
-  addScore
+  addScore,
+  getAllHosts
 };
 
 async function authenticate({ username, password }) {
@@ -75,9 +76,13 @@ async function addScore(hostId, userId) {
   // referal wasn't found -> add new one
   if (newScore === 0) {
     newScore = 1;
-    user.referals.push({host: host, score: newScore});
+    user.referals.push({ host: host, score: newScore });
   }
 
   await user.save();
   return newScore;
+}
+
+async function getAllHosts() {
+  return await User.find({ isHost: true }).select("-hash");
 }
