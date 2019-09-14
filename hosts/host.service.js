@@ -11,8 +11,8 @@ module.exports = {
   getById
 };
 
-async function authenticate({ hostname, password }) {
-  const host = await Host.findOne({ hostname });
+async function authenticate({ name, password }) {
+  const host = await Host.findOne({ name });
   if (host && bcrypt.compareSync(password, host.hash)) {
     const { hash, ...hostWithoutHash } = host.toObject();
     const token = jwt.sign({ sub: host.id }, config.secret);
@@ -29,8 +29,8 @@ async function getAll() {
 
 async function create(hostParam) {
   // validate
-  if (await Host.findOne({ hostname: hostParam.hostname })) {
-    throw 'Hostname "' + hostParam.hostname + '" is already taken';
+  if (await Host.findOne({ name: hostParam.name })) {
+    throw 'Name "' + hostParam.name + '" is already taken';
   }
 
   const host = new Host(hostParam);
