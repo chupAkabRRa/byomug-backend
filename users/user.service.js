@@ -42,6 +42,13 @@ async function create(userParam) {
 
   // save user
   await user.save();
+
+  const { hash, ...userWithoutHash } = user.toObject();
+  const token = jwt.sign({ sub: user.id }, config.secret);
+  return {
+    ...userWithoutHash,
+    token
+  };
 }
 
 async function getById(id) {
