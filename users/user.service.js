@@ -13,8 +13,8 @@ module.exports = {
   getAllHosts
 };
 
-async function authenticate({ username, password }) {
-  const user = await User.findOne({ username });
+async function authenticate({ name, password }) {
+  const user = await User.findOne({ name });
   if (user && bcrypt.compareSync(password, user.hash)) {
     const { hash, ...userWithoutHash } = user.toObject();
     const token = jwt.sign({ sub: user.id }, config.secret);
@@ -31,8 +31,8 @@ async function getAll() {
 
 async function create(userParam) {
   // validate
-  if (await User.findOne({ username: userParam.username })) {
-    throw 'Username "' + userParam.username + '" is already taken';
+  if (await User.findOne({ name: userParam.name })) {
+    throw 'Name "' + userParam.name + '" is already taken';
   }
 
   const user = new User(userParam);
