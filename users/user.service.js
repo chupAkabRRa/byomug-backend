@@ -10,7 +10,7 @@ module.exports = {
   getAll,
   create,
   getById,
-  addScore
+  scan
 };
 
 async function authenticate({ username, password }) {
@@ -57,7 +57,7 @@ async function getById(id) {
   return await User.findById(id).select("-hash");
 }
 
-async function addScore(hostId, userId) {
+async function scan(hostId, userId) {
   const host = await Host.findById(hostId);
   const user = await User.findById(userId);
   var newScore = 0;
@@ -79,5 +79,5 @@ async function addScore(hostId, userId) {
   }
 
   await user.save();
-  return newScore;
+  return { name: user.name, score: newScore };
 }

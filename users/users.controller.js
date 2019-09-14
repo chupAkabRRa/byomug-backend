@@ -5,7 +5,7 @@ const userService = require("./user.service");
 // routes
 router.post("/authenticate", authenticate);
 router.post("/register", register);
-router.post("/scores", addScore);
+router.post("/scan", scan);
 router.get("/:id", getById);
 router.get("/", getAll);
 
@@ -43,9 +43,9 @@ function getById(req, res, next) {
     .catch(err => next(err));
 }
 
-function addScore(req, res, next) {
+function scan(req, res, next) {
   userService
-    .addScore(req.body.hostId, req.body.userId)
-    .then(newScore => res.json({ score: newScore }))
+    .scan(req.body.hostId, req.body.userId)
+    .then(score => res.json(score))
     .catch(err => next(err));
 }
