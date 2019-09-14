@@ -84,5 +84,5 @@ async function addScore(hostId, userId) {
 }
 
 async function getAllHosts() {
-  return await User.find({ isHost: true }).select("-hash");
+  return await User.find({ isHost: true }).select(["name", "location"]);
 }
