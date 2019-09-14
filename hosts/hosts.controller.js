@@ -1,51 +1,43 @@
 const express = require("express");
 const router = express.Router();
-const userService = require("./user.service");
+const hostService = require("./host.service");
 
 // routes
 router.post("/authenticate", authenticate);
 router.post("/register", register);
-router.post("/scores", addScore);
 router.get("/:id", getById);
 router.get("/", getAll);
 
 module.exports = router;
 
 function authenticate(req, res, next) {
-  userService
+  hostService
     .authenticate(req.body)
-    .then(user =>
-      user
-        ? res.json(user)
+    .then(host =>
+      host
+        ? res.json(host)
         : res.status(400).json({ message: "Name or password is incorrect" })
     )
     .catch(err => next(err));
 }
 
 function register(req, res, next) {
-  userService
+  hostService
     .create(req.body)
-    .then(user => (user ? res.json(user) : res.json({})))
+    .then(host => (host ? res.json(host) : res.json({})))
     .catch(err => next(err));
 }
 
 function getAll(req, res, next) {
-  userService
+  hostService
     .getAll()
-    .then(users => res.json(users))
+    .then(hosts => res.json(hosts))
     .catch(err => next(err));
 }
 
 function getById(req, res, next) {
-  userService
+  hostService
     .getById(req.params.id)
-    .then(user => (user ? res.json(user) : res.sendStatus(404)))
-    .catch(err => next(err));
-}
-
-function addScore(req, res, next) {
-  userService
-    .addScore(req.body.hostId, req.body.userId)
-    .then(newScore => res.json({ score: newScore }))
+    .then(host => (host ? res.json(host) : res.sendStatus(404)))
     .catch(err => next(err));
 }

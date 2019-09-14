@@ -8,5 +8,6 @@ mongoose.connect(process.env.MONGODB_URI || config.connectionString, {
 mongoose.Promise = global.Promise;
 
 module.exports = {
-  User: require("../users/user.model")
+  User: require("../users/user.model"),
+  Host: require("../hosts/host.model")
 };

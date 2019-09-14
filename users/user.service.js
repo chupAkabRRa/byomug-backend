@@ -3,18 +3,18 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("_helpers/db");
 const User = db.User;
+const Host = db.Host;
 
 module.exports = {
   authenticate,
   getAll,
   create,
   getById,
-  addScore,
-  getAllHosts
+  addScore
 };
 
-async function authenticate({ name, password }) {
-  const user = await User.findOne({ name });
+async function authenticate({ username, password }) {
+  const user = await User.findOne({ username });
   if (user && bcrypt.compareSync(password, user.hash)) {
     const { hash, ...userWithoutHash } = user.toObject();
     const token = jwt.sign({ sub: user.id }, config.secret);
@@ -31,8 +31,8 @@ async function getAll() {
 
 async function create(userParam) {
   // validate
-  if (await User.findOne({ name: userParam.name })) {
-    throw 'Name "' + userParam.name + '" is already taken';
+  if (await User.findOne({ username: userParam.username })) {
+    throw 'Username "' + userParam.username + '" is already taken';
   }
 
   const user = new User(userParam);
@@ -58,13 +58,12 @@ async function getById(id) {
 }
 
 async function addScore(hostId, userId) {
-  const host = await User.findById(hostId);
+  const host = await Host.findById(hostId);
   const user = await User.findById(userId);
   var newScore = 0;
 
   if (!host) throw "Host not found";
   if (!user) throw "User not found";
-  if (host.isHost === false) throw "Can be called only by host";
 
   user.referals.map(referal => {
     if (referal.host._id.toString() === hostId) {
@@ -81,8 +80,4 @@ async function addScore(hostId, userId) {
 
   await user.save();
   return newScore;
-}
-
-async function getAllHosts() {
-  return await User.find({ isHost: true }).select(["name", "location"]);
 }

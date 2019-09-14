@@ -2,20 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-  name: { type: String, unique: true, required: true },
-  isHost: { type: Boolean, required: true, default: false },
-  location: {
-    type: {
-      type: String,
-      enum: ["Point"]
-    },
-    coordinates: {
-      type: [Number]
-    }
-  },
+  username: { type: String, unique: true, required: true },
+  name: { type: String, required: true },
   referals: [
     {
-      host: this,
+      host: { type: Schema.Types.ObjectId, ref: "Host" },
       score: { type: Number }
     }
   ],
