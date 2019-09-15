@@ -6,9 +6,9 @@ const userService = require("./user.service");
 router.post("/authenticate", authenticate);
 router.post("/register", register);
 router.post("/scan", scan);
+router.get("/hosts", getAllHosts);
 router.get("/:id", getById);
 router.get("/:id/summary", getSummaryById);
-router.get("/", getAll);
 
 module.exports = router;
 
@@ -30,10 +30,10 @@ function register(req, res, next) {
     .catch(err => next(err));
 }
 
-function getAll(req, res, next) {
+function getAllHosts(req, res, next) {
   userService
-    .getAll()
-    .then(users => res.json(users))
+    .getAllHosts()
+    .then(hosts => (hosts ? res.json(hosts) : res.sendStatus(404)))
     .catch(err => next(err));
 }
 

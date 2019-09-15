@@ -2,14 +2,13 @@ const config = require("config.json");
 const bcrypt = require("bcryptjs");
 const db = require("_helpers/db");
 const User = db.User;
-const Host = db.Host;
 
 module.exports = {
   authenticate,
-  getAll,
   create,
   getById,
   scan,
+  getAllHosts,
   getSummaryById
 };
 
@@ -23,8 +22,8 @@ async function authenticate({ username, password }) {
   }
 }
 
-async function getAll() {
-  return await User.find().select("-hash");
+async function getAllHosts() {
+  return await User.find({ isHost: true }).select("-hash");
 }
 
 async function create(userParam) {
@@ -59,6 +58,8 @@ async function getSummaryById(userId) {
   var wasteWeight = 0;
 
   if (!user) throw "User not found";
+  if (user.isHost === true) throw "Wrong user specified";
+
   user.referals.map(referal => {
     numOfCups += referal.score;
   });
@@ -68,7 +69,7 @@ async function getSummaryById(userId) {
 }
 
 async function scan(hostId, userId) {
-  const host = await Host.findById(hostId);
+  const host = await User.findById(hostId);
   const user = await User.findById(userId);
   var newScore = 0;
 

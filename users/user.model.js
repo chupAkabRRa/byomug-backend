@@ -4,13 +4,22 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
   username: { type: String, unique: true, required: true },
   name: { type: String, required: true },
+  isHost: { type: Boolean, required: true, default: false },
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"]
+    },
+    coordinates: {
+      type: [Number]
+    }
+  },
   referals: [
     {
-      host: { type: Schema.Types.ObjectId, ref: "Host" },
+      host: this,
       score: { type: Number }
     }
   ],
-  registeredDate: { type: Date, default: Date.now },
   hash: { type: String, required: true }
 });
 
