@@ -10,7 +10,8 @@ module.exports = {
   getAll,
   create,
   getById,
-  scan
+  scan,
+  getSummaryById
 };
 
 async function authenticate({ username, password }) {
@@ -55,6 +56,20 @@ async function create(userParam) {
 
 async function getById(id) {
   return await User.findById(id).select("-hash");
+}
+
+async function getSummaryById(userId) {
+  const user = await User.findById(userId);
+  var numOfCups = 0;
+  var wasteWeight = 0;
+
+  if (!user) throw "User not found";
+  user.referals.map(referal => {
+    numOfCups += referal.score;
+  });
+  wasteWeight = numOfCups * 18;
+
+  return { cups: numOfCups, weight: wasteWeight };
 }
 
 async function scan(hostId, userId) {

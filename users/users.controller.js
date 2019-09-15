@@ -7,6 +7,7 @@ router.post("/authenticate", authenticate);
 router.post("/register", register);
 router.post("/scan", scan);
 router.get("/:id", getById);
+router.get("/:id/summary", getSummaryById);
 router.get("/", getAll);
 
 module.exports = router;
@@ -40,6 +41,13 @@ function getById(req, res, next) {
   userService
     .getById(req.params.id)
     .then(user => (user ? res.json(user) : res.sendStatus(404)))
+    .catch(err => next(err));
+}
+
+function getSummaryById(req, res, next) {
+  userService
+    .getSummaryById(req.params.id)
+    .then(summary => res.json(summary))
     .catch(err => next(err));
 }
 
